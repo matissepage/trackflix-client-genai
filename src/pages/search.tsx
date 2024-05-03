@@ -63,6 +63,38 @@ const StyledSearch = styled.div`
     }
 `
 
+const StyledAIComponent = styled.div`
+    display: flex;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 2px solid ${(props) => props.theme.palette.primary.main};
+    border-radius: 50px;
+    min-height: 32px;
+    width: 150px;
+    padding: 10px;
+    align-items: center;
+
+    &:hover {
+        transition: background-color 0.3s ease-in-out;
+        background: red;
+    }
+`
+
+const StyledButton = styled.button`
+    padding: 5px 5px;
+    background: transparent;
+    height: 100%;
+    width: 100%;
+    color: white;
+    font-size: 1em;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    width: 100%;
+`;
+
+
 const StyledVideoList = styled.div`
     padding: 0 40px;
     display: flex;
@@ -156,6 +188,10 @@ const SearchPage = () => {
         })()
     }, [nextToken])
 
+    const handleSearch = () => {
+        console.log('Button Clicked', searchValue);
+    }
+
     return (
         <Layout>
             <StyledSearchItem>
@@ -171,6 +207,13 @@ const SearchPage = () => {
                     </StyledSearch>
                 )}
             </StyledSearchItem>
+            <StyledAIComponent>
+                <StyledButton
+                    onClick={handleSearch}
+                >
+                    Search with AI 🧠
+                </StyledButton>
+            </StyledAIComponent>
             <StyledVideoList>
                 {vodAssets
                     .filter(filterAssets)
