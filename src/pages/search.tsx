@@ -169,12 +169,16 @@ const SearchPage = () => {
     const [searchValue, setSearchValue] = useState<string>('')
     const { width } = useWindowDimensions()
     const { api } = useContext(CMSContext)
+    const [searchAssets, setSearchAssets] = useState<Array<VideoOnDemand>>([])
 
-    const filterAssets = (elem: VideoOnDemand) =>
+    const filterAssets = (elem: VideoOnDemand) => 
         elem.media?.title.toLowerCase().includes(searchValue.toLowerCase()) ||
         elem?.media?.description
             ?.toLowerCase()
             .includes(searchValue.toLowerCase())
+
+    const filterById = (elem: VideoOnDemand) => 
+        elem.media?.id
 
     useEffect(() => {
         ;(async () => {
@@ -182,16 +186,24 @@ const SearchPage = () => {
                 const response = await api.fetchVodFiles(nextToken)
                 setNextToken(response?.nextToken ? response?.nextToken : null)
                 setVodAssets(response.data)
+                setSearchAssets(response.data)
             } catch (error) {
                 console.error('search.tsx(fetchVodFiles):', error)
             }
         })()
     }, [nextToken])
 
-    const handleSearch = () => {
+    const handleSearch = (elem: VideoOnDemand) => {
         console.log('Button Clicked', searchValue);
+        const matches = [66,67]
+        setSearchAssets(vodAssets.filter(vod => matches.includes(Number(vod.id))))
     }
 
+    const handleType = (e) => {
+        setSearchValue(e.target.value);
+        setSearchAssets(vodAssets.filter(filterAssets))
+      }
+    
     return (
         <Layout>
             <StyledSearchItem>
@@ -199,7 +211,7 @@ const SearchPage = () => {
                     type="text"
                     placeholder="Search.."
                     name="search"
-                    onChange={(e) => setSearchValue(e.target.value)}
+                    onChange={handleType}
                 />
                 {width >= screenSizes.xs && (
                     <StyledSearch>
@@ -215,9 +227,7 @@ const SearchPage = () => {
                 </StyledButton>
             </StyledAIComponent>
             <StyledVideoList>
-                {vodAssets
-                    .filter(filterAssets)
-                    .map((elem: VideoOnDemand, key) => {
+                {searchAssets.map((elem: VideoOnDemand, key) => {
                         return <VideoItem vod={elem} key={key} />
                     })}
             </StyledVideoList>
