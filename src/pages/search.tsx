@@ -7,7 +7,7 @@ import { Thumbnail } from '../models'
 import VideoCard from '../shared/components/Card/VideoCard'
 import { screenSizes, defaultVideoCardProperties } from '../shared/constants'
 import { useWindowDimensions } from '../shared/hooks'
-import { CMSContext } from '../context/CMSContext'
+import { CMSContext, DemoContext } from '../context/CMSContext'
 
 const StyledSearchItem = styled.div`
     display: flex;
@@ -169,6 +169,7 @@ const SearchPage = () => {
     const [searchValue, setSearchValue] = useState<string>('')
     const { width } = useWindowDimensions()
     const { api } = useContext(CMSContext)
+    const { genApi } = useContext(DemoContext)
     const [searchAssets, setSearchAssets] = useState<Array<VideoOnDemand>>([])
 
     const filterAssets = (elem: VideoOnDemand) => 
@@ -193,10 +194,15 @@ const SearchPage = () => {
         })()
     }, [nextToken])
 
-    const handleSearch = (elem: VideoOnDemand) => {
-        console.log('Button Clicked', searchValue);
-        const matches = [66,67]
-        setSearchAssets(vodAssets.filter(vod => matches.includes(Number(vod.id))))
+    const handleSearch = async (elem: VideoOnDemand) => {
+        try {
+            const response = await genApi.fetchMatches(searchValue, 'high')
+            const matches = response.results.map(Number)
+            setSearchAssets(vodAssets.filter(vod => matches.includes(Number(vod.id))))
+        }
+        catch (error) {
+            console.error('search.tsx(handleSearch):', error)
+        }
     }
 
     const handleType = (e) => {
