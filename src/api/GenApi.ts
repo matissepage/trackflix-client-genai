@@ -20,11 +20,9 @@ export class GenApi implements IGenApi {
               },
             body: JSON.stringify({query: query, threshold: threshold})
         })
-
-        console.log(response)
+        
         const responseData = await response.json()
-        const result = responseData.data
 
-        return result as Matches
+        return responseData as Matches
     }
 }

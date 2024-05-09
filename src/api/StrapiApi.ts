@@ -45,11 +45,18 @@ export class StrapiApi implements IApi {
             const thumbnailObj = response.attributes?.Thumbnails?.data[0]
             const { createdAt, updatedAt } = thumbnailObj.attributes
             const { thumbnail } = thumbnailObj?.attributes?.formats
+            var src = ""
+            
+            if(thumbnail.url.includes("s3")){
+                src = `${thumbnail.url}`
+            }else{
+                src = `${this.baseUrl}${thumbnail.url}`
+            }
 
             const thumbnailFormated = {
                 id: `${thumbnailObj.id}`,
                 ext: thumbnail.ext,
-                src: `${this.baseUrl}${thumbnail.url}`,
+                src: src,
                 createdAt,
                 updatedAt,
             }
