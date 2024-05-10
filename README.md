@@ -58,4 +58,4 @@ These instructions will help you get a copy of Trackflix up and running on your 
 | ------------- | ----------- | ------------- |
 | `REACT_APP_CMS_BASE_URL` | The URL of the Trackflix API | `https://trackflix-cms.trackit.io/` |
 | `REACT_APP_CMS_TOKEN` | The API token used to authenticate with the Trackflix API | None |
-| `DEMO_API_URL` | The URL of the Demo API | `https://vuuytvazl8.execute-api.us-west-2.amazonaws.com/dev` |
+| `REACT_APP_DEMO_API_URL` | The URL of the Demo API | `https://vuuytvazl8.execute-api.us-west-2.amazonaws.com/dev` |
