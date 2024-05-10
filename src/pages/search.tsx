@@ -219,6 +219,7 @@ const SearchPage = () => {
                     placeholder="Search.."
                     name="search"
                     onChange={handleType}
+                    disabled = {isDataLoading}
                 />
                 {width >= screenSizes.xs && (
                     <StyledSearch>
