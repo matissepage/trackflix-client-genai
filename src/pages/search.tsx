@@ -8,6 +8,7 @@ import VideoCard from '../shared/components/Card/VideoCard'
 import { screenSizes, defaultVideoCardProperties } from '../shared/constants'
 import { useWindowDimensions } from '../shared/hooks'
 import { CMSContext, DemoContext } from '../context/CMSContext'
+import Loader from '../shared/components/Loader'
 
 const StyledSearchItem = styled.div`
     display: flex;
@@ -171,15 +172,13 @@ const SearchPage = () => {
     const { api } = useContext(CMSContext)
     const { genApi } = useContext(DemoContext)
     const [searchAssets, setSearchAssets] = useState<Array<VideoOnDemand>>([])
+    const [isDataLoading, setIsDataLoading] = useState(false);
 
     const filterAssets = (elem: VideoOnDemand) => 
         elem.media?.title.toLowerCase().includes(searchValue.toLowerCase()) ||
         elem?.media?.description
             ?.toLowerCase()
             .includes(searchValue.toLowerCase())
-
-    const filterById = (elem: VideoOnDemand) => 
-        elem.media?.id
 
     useEffect(() => {
         ;(async () => {
@@ -195,6 +194,7 @@ const SearchPage = () => {
     }, [nextToken])
 
     const handleSearch = async (elem: VideoOnDemand) => {
+        setIsDataLoading(true);
         try {
             const response = await genApi.fetchMatches(searchValue, 'high')
             const matches = response.results.map(Number)
@@ -203,6 +203,7 @@ const SearchPage = () => {
         catch (error) {
             console.error('search.tsx(handleSearch):', error)
         }
+        setIsDataLoading(false);
     }
 
     const handleType = (e) => {
@@ -232,11 +233,11 @@ const SearchPage = () => {
                     Search with AI 🧠
                 </StyledButton>
             </StyledAIComponent>
-            <StyledVideoList>
+            {isDataLoading ? <Loader /> : <StyledVideoList>
                 {searchAssets.map((elem: VideoOnDemand, key) => {
                         return <VideoItem vod={elem} key={key} />
                     })}
-            </StyledVideoList>
+            </StyledVideoList>}
         </Layout>
     )
 }
